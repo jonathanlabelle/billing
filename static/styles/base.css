@@ -1,0 +1,22 @@
+h1 {
+    color: red;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background: #353535;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar-header{
+    padding: 20px;
+    background: #284B63;
+}
