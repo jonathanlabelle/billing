@@ -1,5 +1,26 @@
 {% extends 'base.html' %}
-
+    {% block title %} Create Invoice {% endblock %}
 {% block content %}
-    <h1>{%block title%} Create Invoice {% endblock %}</h1>
+
+<div id="content-create-invoice">
+    <div class="message">
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+    </div>
+    <div class="form-body" id="form-body-create-invoice">
+        <div class="form-content">
+            <div class="form-header">
+                <h4>Create new invoice</h4>
+                <p>Enter the id of an existing client</p>
+            </div>
+            <div class="form-inputs">
+                <form action="" method="POST">
+                    <p><input type="text" name="client_id" placeholder="Client ID"/></p>
+                    <p><button type="submit" class="btn btn-primary submit">Create invoice</button></p>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

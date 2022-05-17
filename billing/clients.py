@@ -9,6 +9,15 @@ INSERT
 """
 
 
+def create_new_client(connection, client_data):
+    message = "There was a problem while adding the client"
+    if client_data.get('client_email') and client_data.get('client_phone') and client_data.get('client_reference'):
+        message = insert_client_full(connection, client_data.get('client_name'), client_data.get('client_phone'),
+                                  client_data.get('client_email'), client_data.get('client_reference'))
+
+    return message
+
+
 def insert_client_name(connection, name):
     cursor = connection.cursor()
     try:
@@ -114,36 +123,46 @@ def insert_client_name_phone_reference(connection, name, phone, reference):
             print("MySQL connection is closed")
 
 
+def insert_client_full(connection, name, phone, email, reference):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(insert_query_full, (name, phone, email, reference, datetime.now()))
+        cursor.execute("SELECT * FROM clients WHERE id=LAST_INSERT_ID();")
+        data = cursor.fetchall()
+        connection.commit()
+        message = "{} added to the database with the id {}".format(name, data[0][0])
+    except Error as err:
+        message = "There was a problem while adding the client"
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    return message
+
+
 insert_query_full = """INSERT INTO clients (name, phone, email, reference, account_open_date) 
                                VALUES (%s, %s, %s, %s, %s); """
 
 insert_query_name = """INSERT INTO clients (name, account_open_date) 
                                VALUES (%s, %s); """
 
-
 insert_query_name_email = """INSERT INTO clients (name, email, account_open_date) 
                                VALUES (%s, %s, %s); """
-
 
 insert_query_name_phone = """INSERT INTO clients (name, phone, account_open_date) 
                                VALUES (%s, %s, %s); """
 
-
 insert_query_name_reference = """INSERT INTO clients (name, reference, account_open_date) 
                                VALUES (%s, %s, %s); """
-
 
 insert_query_name_email_phone = """INSERT INTO clients (name, email, phone, account_open_date) 
                                VALUES (%s, %s, %s, %s); """
 
-
 insert_query_name_email_reference = """INSERT INTO clients (name, email, reference, account_open_date) 
                                VALUES (%s, %s, %s, %s); """
 
-
 insert_query_name_phone_reference = """INSERT INTO clients (name, phone, reference, account_open_date) 
                                VALUES (%s, %s, %s, %s); """
-
 
 """
 TIGGER INSERTION
@@ -194,7 +213,6 @@ update_client_phone = "UPDATE clients SET phone=%s WHERE id = %s;"
 update_client_reference = "UPDATE clients SET reference=%s WHERE id = %s;"
 update_client_date = "UPDATE clients SET account_open_date=%s WHERE id = %s;"
 
-
 """
 DELETE
 """
@@ -204,7 +222,7 @@ def delete_client(connection):
     cursor = connection.cursor()
     try:
         client_id = int(input("Enter the ID of the client you want to delete"))
-        cursor.execute(delete_client_check_exist,(client_id,))
+        cursor.execute(delete_client_check_exist, (client_id,))
         data = cursor.fetchall()
         if not data:
             print("no client have this id")

@@ -1,29 +1,27 @@
 
 import mysql.connector
 from mysql.connector import Error
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect
 from markupsafe import escape
 import datetime
+
+from billing import invoice, clients
 
 app = Flask(__name__)
 
 
 @app.route('/')
 def index():
-    connection = dummy_connection()
-    cursor = connection.cursor()
-    try:
-        cursor.execute("select * from clients;")
-        clients = cursor.fetchall()
-        print("Query successful")
-    except Error as err:
-        print(f"Error: '{err}'")
-    return render_template('index.html', clients=clients)
+    return render_template('index.html')
 
 
-@app.route('/create_invoice/')
+@app.route('/create_invoice/', methods=['POST', 'GET'])
 def create_invoice():
-    return render_template('create_invoice.html')
+    message = "Enter the client number associated with the invoice to create"
+    if request.method == 'POST':
+        client_id = request.form.get('client_id')
+        message = invoice.create_new_invoice(dummy_connection(), client_id)
+    return render_template('create_invoice.html', message=message)
 
 
 @app.route('/edit_invoice/')
@@ -31,9 +29,13 @@ def edit_invoice():
     return render_template('edit_invoice.html')
 
 
-@app.route('/create_client/')
+@app.route('/create_client/', methods=['POST', 'GET'])
 def create_client():
-    return render_template('create_client.html')
+    message = "Enter the name of the client or company you want to create."
+    if request.method == 'POST':
+        client_data = request.form
+        message = clients.create_new_client(dummy_connection(), client_data)
+    return render_template('create_client.html', message=message)
 
 
 @app.route('/edit_client/')
@@ -97,7 +99,7 @@ def dummy_connection():
 
 
 if __name__ == '__main__':
-    #connection = create_db_connection("localhost", "root", password, "test")
-    print("allo")
+    #connection = create_db_connection("localhost", "root", "#", "test")
+    invoice.create_new_invoice(dummy_connection(),1)
 
 

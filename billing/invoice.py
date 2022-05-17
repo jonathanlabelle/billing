@@ -6,29 +6,28 @@ from mysql.connector import Error
 from billing import utils
 
 
-def create_new_invoice(connection):
-    print("Enter the ID of the client : ")
-    client_id = int(input())
+def create_new_invoice(connection, client_id):
+    message = ""
     try:
         cursor = connection.cursor()
         cursor.execute("SELECT * from clients WHERE id=%s", (client_id,))
-
         data = cursor.fetchall()
         if data:
-            cursor.execute(insert_new_invoice_query, (1, 1))
+            cursor.execute(insert_new_invoice_query, (client_id, 1))
             cursor.execute("SELECT * FROM invoice WHERE invoice_id=LAST_INSERT_ID();")
             data = cursor.fetchall()
-            print("Added invoice number " + str(data[0][0]))
+            message = "Added invoice number {} for client number {}".format(data[0][0], client_id)
             connection.commit()
         else:
-            print("Client does not exist")
+            message = "Client does not exist"
     except Error as err:
+        message = "Could not add the invoice"
         print(f"Error: '{err}'")
     finally:
         if connection.is_connected():
             cursor.close()
             connection.close()
-            print("MySQL connection is closed")
+            return message
 
 
 def update_date_sent(connection, invoice_id):

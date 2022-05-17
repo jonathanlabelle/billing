@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="../static/styles/base.css">
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/72642c9bd3.js" crossorigin="anonymous"></script>
-    <title>Simplevoice</title>
+    <title>{% block title%}{% endblock %} - Simplevoice</title>
 </head>
 <body>
     <div class="wrapper">
@@ -48,11 +48,15 @@
                     <li class="group-sidebar"><a href="{{ url_for('tutorial') }}">Tutorial</a></li>
                 </ul>
         </nav>
-        <nav class="topper">
+        <div id="panel">
+            <div class="topper">
             <h2>hello</h2>
-        </nav>
-    <div class="content">
-    </div>
+            </div>
+            <div class="content wrapper">
+            {% block content %}
+            {% endblock %}
+            </div>
+        </div>
     </div>
 
 </body>
