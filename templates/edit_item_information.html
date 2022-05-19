@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title%} Edit client {% endblock %}
+{% block title%} Edit customer {% endblock %}
 
 {% block content %}
     <div id="content-create-invoice">
@@ -9,15 +9,16 @@
                 <p>{{ message }}</p>
             {% endif %}
         </div>
-        <div class="form-body" id="form-body-edit-client">
+        <div class="form-body" id="form-body-create-customer">
             <div class="form-content">
                 <div class="form-header">
-                    <h4>Edit an item</h4>
-                    <p>Enter the ID of the item</p>
+                    <h4>Edit item information</h4>
+                    <p>Edit one or more field</p>
                 </div>
                 <div class="form-inputs">
                     <form action="" method="POST">
-                        <p><input type="text" name="item_id" placeholder="Item ID"/></p>
+                        <p><input type="text" name="item_description" placeholder="Description : {{item_data[0][1]}}"/></p>
+                        <p><input type="text" name="item_phone" placeholder="Price : {{item_data[0][2]}}$"/></p>
                         <p><button type="submit" class="btn btn-primary submit">Edit item</button></p>
                     </form>
                 </div>

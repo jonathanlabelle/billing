@@ -1,5 +1,28 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title%} Edit client {% endblock %}
 
 {% block content %}
-    <h1>{%block title%} Edit Client {% endblock %}</h1>
+    <div id="content-create-invoice">
+        <div class="message">
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
+        </div>
+        <div class="form-body" id="form-body-edit-client">
+            <div class="form-content">
+                <div class="form-header">
+                    <h4>Edit a client</h4>
+                    <p>Enter the ID of the client</p>
+                </div>
+                <div class="form-inputs">
+                    <form action="" method="POST">
+                        <p><input type="text" name="client_id" placeholder="Client ID"/></p>
+                        <p><button type="submit" class="btn btn-primary submit">Edit client</button></p>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 {% endblock %}

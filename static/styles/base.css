@@ -120,12 +120,18 @@ body {
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
+
+
 #form-body-create-invoice {
 
 }
 
 #form-body-create-customer {
     margin-top: 150px;
+}
+
+#form-body-edit-client {
+    margin-top: 50px;
 }
 
 .form-content {
@@ -152,6 +158,30 @@ body {
     margin-bottom: 20px;
 }
 
+/* EDIT INVOICE ADD LINES*/
+.add_invoice_line_row {
+    display: flex;
+    height: 50px;
+    margin-bottom: 5px;
+}
+
+.add_invoice_line_row input {
+    flex-direction: row;
+    align-self: flex-end;
+    justify-content: flex-start;
+    margin-right: 40px;
+    width: 30%;
+}
+
+#form-body-add-invoice-line {
+    margin-top: 150px;
+}
+
+#form-body-add-invoice-line .line-header {
+    margin-bottom: 0px;
+    padding-bottom: 0px;
+
+}
 .form-content input[type=text], .form-content input[type=password], .form-content input[type=email], .form-content select {
     width: 100%;
     padding: 9px 20px;
@@ -180,3 +210,30 @@ body {
     box-shadow: none;
 }
 
+input[type='radio']:after {
+    border: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 115px;
+    border-radius: 50%;
+    position: relative;
+    background-color: #FFFCF2;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+}
+
+input[type='radio']:checked:after {
+    border: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    top: -2px;
+    left: 0px;
+    position: relative;
+    background-color: #403D39;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid #FFFCF2;
+}

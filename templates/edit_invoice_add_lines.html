@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title%} Edit customer {% endblock %}
+
+{% block content %}
+    <div id="content-create-invoice">
+        <div class="message">
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
+        </div>
+        <div class="form-body" id="form-body-add-invoice-line">
+            <div class="form-content">
+                <div class="form-header">
+                    <h4>Enter the invoice lines</h4>
+                    <p>You can create one or more</p>
+                </div>
+                <div class="form-inputs">
+                    <form action="" method="POST">
+                        <p class="line-header">Line 1</p>
+                        <div class="add_invoice_line_row">
+                            <input type="text" name="item_id_1" placeholder="Item number"/>
+                            <input type="text" name="item_quantity_1" placeholder="Item quantity"/>
+                        </div>
+                        <p class="line-header">Line 2</p>
+                        <div class="add_invoice_line_row">
+                            <input type="text" name="item_id_2" placeholder="Item number"/>
+                            <input type="text" name="item_quantity_2" placeholder="Item quantity"/>
+                        </div>
+                        <p class="line-header">Line 3</p>
+                        <div class="add_invoice_line_row">
+                            <input type="text" name="item_id_3" placeholder="Item number"/>
+                            <input type="text" name="item_quantity_3" placeholder="Item quantity"/>
+                        </div>
+                        <p><button type="submit" class="btn btn-primary submit">Enter lines</button></p>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

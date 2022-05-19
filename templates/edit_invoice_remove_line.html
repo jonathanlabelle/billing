@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-    {% block title %} Create Item {% endblock %}
+    {% block title %} Create Invoice {% endblock %}
 {% block content %}
 
 <div id="content-create-invoice">
@@ -11,14 +11,13 @@
     <div class="form-body" id="form-body-create-invoice">
         <div class="form-content">
             <div class="form-header">
-                <h4>Create new item</h4>
-                <p>Enter the name and the price of the item</p>
+                <h4>Delete an invoice line</h4>
+                <p>Enter the id of the invoice and the item</p>
             </div>
             <div class="form-inputs">
                 <form action="" method="POST">
-                    <p><input type="text" name="item_name" placeholder="Item Description"/></p>
-                    <p><input type="text" name="item_price" placeholder="Item price"/></p>
-                    <p><button type="submit" class="btn btn-primary submit">Create item</button></p>
+                    <p><input type="text" name="client_id" placeholder="Client ID"/></p>
+                    <p><button type="submit" class="btn btn-primary submit">Create invoice</button></p>
                 </form>
             </div>
         </div>

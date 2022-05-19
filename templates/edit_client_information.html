@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title%} Edit customer {% endblock %}
+
+{% block content %}
+    <div id="content-create-invoice">
+        <div class="message">
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
+        </div>
+        <div class="form-body" id="form-body-create-customer">
+            <div class="form-content">
+                <div class="form-header">
+                    <h4>Edit client information</h4>
+                    <p>Edit one or more field</p>
+                </div>
+                <div class="form-inputs">
+                    <form action="" method="POST">
+                        <p><input type="text" name="client_name" placeholder="Name : {{client_data[0][1]}}"/></p>
+                        <p><input type="text" name="client_phone" placeholder="Phone : {{client_data[0][2]}}"/></p>
+                        <p><input type="text" name="client_email" placeholder="E-mail :  {{client_data[0][3]}}"/></p>
+                        <p><input type="text" name="client_reference" placeholder="Contact name : {{client_data[0][4]}}"/></p>
+                        <p><button type="submit" class="btn btn-primary submit">Edit client</button></p>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}

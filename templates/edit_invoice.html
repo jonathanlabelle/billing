@@ -1,5 +1,40 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
+{% block title%} Edit invoice {% endblock %}
 
 {% block content %}
-    <h1>{%block title%} Edit Invoice {% endblock %}</h1>
+    <div id="content-create-invoice">
+        <div class="message">
+            {% if message %}
+                <p>{{ message }}</p>
+            {% endif %}
+        </div>
+        <div class="form-body" id="form-body-edit-invoice">
+            <div class="form-content">
+                <div class="form-header">
+                    <h4>Enter the invoice number to edit</h4>
+                    <p>Select if it's to add some lines, remove one or edit the invoice information</p>
+                </div>
+                <div class="form-inputs">
+                    <form action="" method="POST">
+                        <p><input type="text" name="invoice_id" placeholder="Invoice ID"/></p>
+                        <div class="form-check form-check-inline">
+                              <input class="" type="radio" name="invoiceEditRequest" id="addLines" value="add_lines" checked="checked">
+                              <label class="form-check-label" for="addLines">Add new lines</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="invoiceEditRequest" id="removeLine" value="remove_line">
+                              <label class="form-check-label" for="addLines">Remove line</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="invoiceEditRequest" id="editInformation" value="edit_info">
+                              <label class="form-check-label" for="addLines">Edit information</label>
+                        </div>
+                        <p><button type="submit" class="btn btn-primary submit">Edit invoice</button></p>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
 {% endblock %}
