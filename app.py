@@ -194,7 +194,7 @@ def execute_query(connection, query):
 
 
 def dummy_connection():
-    return create_db_connection("localhost", "root", "Raton3460!!", "test")
+    return create_db_connection("localhost", "dummy", "dummy22", "test")
 
 
 if __name__ == '__main__':
