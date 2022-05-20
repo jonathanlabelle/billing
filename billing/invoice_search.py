@@ -28,3 +28,14 @@ def get_item_data(connection, invoice_id):
             cursor.close()
             connection.close()
     return data
+
+
+def check_invoice_line_exist(cursor, invoice_id, item_id):
+    try:
+        cursor.execute("SELECT EXISTS(SELECT * FROM invoice_line WHERE invoice_id=%s and item_id=%s);", (invoice_id, item_id))
+        data = cursor.fetchall()
+    except Error as err:
+        data = None
+    finally:
+        cursor.close()
+    return data

@@ -35,7 +35,9 @@ def create_invoice():
 
 @app.route('/edit_invoice/', methods=['POST', 'GET'])
 def edit_invoice():
-    message = "Edit an existing invoice"
+    message = request.args.get('message')
+    if not message:
+        message = "Edit an existing invoice"
     if request.method == 'POST':
         invoice_id = request.form.get('invoice_id')
         data = invoice_search.search_if_exist(dummy_connection(), invoice_id)[0]
@@ -44,8 +46,7 @@ def edit_invoice():
             if edit_request == "add_lines":
                 return redirect(url_for('edit_invoice_add_lines', invoice_id=invoice_id))
             if edit_request == "remove_line":
-                message = edit_request
-                return render_template('edit_invoice_remove_linne.html', message=message)
+                return redirect(url_for('edit_invoice_remove_line', invoice_id=invoice_id))
             if edit_request == "edit_info":
                 message = edit_request
                 return render_template('edit_invoice.html', message=message)
@@ -70,11 +71,11 @@ def edit_invoice_add_lines():
 @app.route('/edit_invoice/remove_line', methods=['POST', 'GET'])
 def edit_invoice_remove_line():
     invoice_id = request.args.get('invoice_id', None)
-    message = "Remove a line from {} :".format(invoice_id)
+    message = "Remove a line from {} .".format(invoice_id)
     if request.method == 'POST':
         row_to_delete = request.form
-        message = invoice_line.add_lines(dummy_connection(), row_to_delete, invoice_id)
-        return redirect(url_for('edit_invoice_add_lines', message=message, invoice_id=invoice_id))
+        message = invoice_line.delete_line(dummy_connection(), row_to_delete, invoice_id)
+        return redirect(url_for('edit_invoice', message=message, invoice_id=invoice_id))
     return render_template('edit_invoice_remove_line.html', message=message)
 
 

@@ -1,6 +1,6 @@
 from mysqlx import Error
 
-from billing import utils
+from billing import utils, invoice_search
 
 insert_query = """INSERT INTO invoice_line (invoice_id, item_id, quantity, price) 
                                VALUES (%s, %s, %s, %s) """
@@ -36,6 +36,26 @@ def add_lines(connection, rows_to_add, invoice_id):
                 message += " " + "Line 3 had a problem."
     cursor.close()
     connection.close()
+    return message
+
+
+def delete_line(connection, row_to_delete, invoice_id):
+    cursor = connection.cursor()
+    data = invoice_search.check_invoice_line_exist(cursor, invoice_id, row_to_delete.get('item_id'))
+    if not data[0][0]:
+        message = "Couldn't find item number {} in invoice number {}".format(row_to_delete.get('item_id'), invoice_id)
+    else:
+        try:
+            cursor = connection.cursor()
+            delete_invoice_line(cursor, invoice_id, row_to_delete.get('item_id'))
+            connection.commit()
+            message = "Deleted item {} from invoice number {}".format(row_to_delete.get('item_id'), invoice_id)
+        except Error as err:
+            message = "Error deleting the item from the invoice"
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
     return message
 
 
@@ -85,21 +105,10 @@ def insert_item(cursor, invoice_id, item_id, quantity):
         return message
 
 
-def delete_item(connection, invoice_id, item_id):
-    validation = check_if_invoice_exist(connection, invoice_id) and check_if_item_exist(connection, item_id)
-    cursor = connection.cursor()
-    if validation:
-        try:
-            cursor.execute(invoice_line_delete_query, (invoice_id, item_id))
-            connection.commit()
-            print("Delete successful")
-        except Error as err:
-            print(f"Error: '{err}'")
-        finally:
-            if connection.is_connected():
-                cursor.close()
-                connection.close()
-                print("MySQL connection is closed")
+def delete_invoice_line(cursor, invoice_id, item_id):
+    cursor.execute(invoice_line_delete_query, (invoice_id, item_id))
+    return cursor.fetchall()
+
 
 
 def update_invoice_line(connection, column, invoice_id, item_id, update):
