@@ -1,5 +1,9 @@
 from datetime import datetime
-from billing import dummy_connection, item_listing, utils, invoice_line, clients, addresses
+
+import mysql
+from mysql.connector import Error
+
+from billing import item_listing, utils, invoice_line, clients, addresses
 
 from dateutil.relativedelta import relativedelta
 
@@ -63,19 +67,31 @@ insert_dummy_invoice_lines = [(1, 1, "Esquiriel 454g", 7.50, 14),
                               (6, 7, "Huancamaná 454g", 9.50, 25)]
 
 
+def create_db_connection(host_name, user_name, user_password, db_name):
+    connection = None
+    try:
+        connection = mysql.connector.connect(
+            host=host_name,
+            user=user_name,
+            passwd=user_password,
+            database=db_name
+        )
+        print("MySQL Database connection successful")
+    except Error as err:
+        print(f"Error: '{err}'")
 
-insert_dummy_payments = [(1, 1, "Esquiriel 454g", 7.50, 14),
-                         ]
+    return connection
 
 
-def insert_dummy_data():
-    utils.insert_multiple_rows_generic(dummy_connection(), clients.insert_query_full, insert_dummy_clients)
-    for i in range(1, 11):
-        addresses.update_address(dummy_connection(), "address", i, insert_dummy_adresses[i - 1][0])
-        addresses.update_address(dummy_connection(), "city", i, insert_dummy_adresses[i - 1][1])
-        addresses.update_address(dummy_connection(), "province", i, insert_dummy_adresses[i - 1][2])
-        addresses.update_address(dummy_connection(), "postal_code", i, insert_dummy_adresses[i - 1][3])
+def dummy_connection():
+    return create_db_connection("localhost", "dummy", "dummy22", "test")
+
+
+def insert_dummy_data(connection):
+    connection = dummy_connection()
+    utils.insert_multiple_rows_generic(connection, clients.insert_query_full, insert_dummy_clients)
+    connection = dummy_connection()
     for i in range(0, 12):
-        item_listing.insert_item(dummy_connection(), insert_dummy_items[i][0])
-        item_listing.update_item_listing(dummy_connection(), i + 1, "item_price", insert_dummy_items[i][1])
-    utils.insert_multiple_rows_generic(dummy_connection, invoice_line.insert_invoice_line_query, insert_dummy_invoice_lines)
+        connection = dummy_connection()
+        item_listing.insert_item(connection, insert_dummy_items[i][0], insert_dummy_items[i][1])
+    utils.insert_multiple_rows_generic(connection, invoice_line.insert_invoice_line_query, insert_dummy_invoice_lines)

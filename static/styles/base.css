@@ -237,3 +237,16 @@ input[type='radio']:checked:after {
     visibility: visible;
     border: 2px solid #FFFCF2;
 }
+
+.confirmation-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%
+}
+
+.confirmation-row button {
+    margin: 20px;
+    min-width: 150px;
+    flex-grow: 1;
+}

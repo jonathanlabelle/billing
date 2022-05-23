@@ -51,24 +51,20 @@ def update_item_listing(cursor, item_id, column, update):
 
 def delete_item_listing(connection, item_id):
     cursor = connection.cursor()
+    message = ""
     try:
-        cursor.execute(check_id_exist, (item_id,))
-        data = cursor.fetchall()
-        if data:
-            cursor.execute("SET GLOBAL FOREIGN_KEY_CHECKS=0")
-            cursor.execute(delete_item_query, (item_id,))
-            print("DELETE successful")
-        else:
-            print("Item does not exist")
+        cursor.execute("SET GLOBAL FOREIGN_KEY_CHECKS=0")
+        cursor.execute(delete_item_query, (item_id,))
+        message = "Successfully deleted item {}".format(item_id)
     except Error as err:
-        print(f"Error: '{err}'")
+        message = "An error occurred while deleting item {}".format(item_id)
     finally:
         cursor.execute("SET GLOBAL FOREIGN_KEY_CHECKS=1")
         connection.commit()
         if connection.is_connected():
             cursor.close()
             connection.close()
-            print("MySQL connection is closed")
+    return message
 
 
 def get_column_update_query(column):

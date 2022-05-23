@@ -4,18 +4,20 @@ from flask import Flask, render_template, request, redirect, url_for
 from markupsafe import escape
 import datetime
 
-from billing import invoice, clients, client_search, item_listing, item_search, invoice_search, invoice_line
+from billing import invoice, clients, client_search, item_listing, item_search, invoice_search, invoice_line, \
+    database_dml, dummy_data
 
 app = Flask(__name__)
 
 
 # TODO CLIENT NAME WHEN UPDATE DROP DOWN
-# TODO NOT NULL PLACEHOLDERS
 # TODO RADIO BUTTON BLUE TOP
 # TODO id="content-create-invoice TO CLASS
 # TODO id="form-body-create-customer" TO CLASS
 # TODO ITEM LIST DROP DOWN WHEN CREATING INVOICE LINE
 # TODO id="content-create-invoice" to class
+# TODO DUE DATE DATE SENT EDIT
+# TODO TRIGGER DELETE INVOICE LINE UPDATE INVOICE TOTAL
 
 # RESUME WORK AT : EDIT INVOICE REMOVE LINE
 
@@ -49,7 +51,7 @@ def edit_invoice():
                 return redirect(url_for('edit_invoice_remove_line', invoice_id=invoice_id))
             if edit_request == "edit_info":
                 message = edit_request
-                return render_template('edit_invoice.html', message=message)
+                return redirect(url_for('edit_invoice_information', invoice_id=invoice_id))
         else:
             message = "No matching invoice"
     return render_template('edit_invoice.html', message=message)
@@ -77,6 +79,51 @@ def edit_invoice_remove_line():
         message = invoice_line.delete_line(dummy_connection(), row_to_delete, invoice_id)
         return redirect(url_for('edit_invoice', message=message, invoice_id=invoice_id))
     return render_template('edit_invoice_remove_line.html', message=message)
+
+
+@app.route('/edit_invoice/edit_information', methods=['POST', 'GET'])
+def edit_invoice_information():
+    invoice_id = request.args.get('invoice_id', None)
+    message = "Edit invoice {} .".format(invoice_id)
+    if request.method == 'POST':
+        new_client_number = request.form
+        message = invoice.edit_information(dummy_connection(), new_client_number, invoice_id)
+        return redirect(url_for('edit_invoice', message=message, invoice_id=invoice_id))
+    return render_template('edit_invoice_information.html', message=message)
+
+
+@app.route('/delete_invoice/', methods=['POST', 'GET'])
+def delete_invoice():
+    message = request.args.get('message')
+    if not message:
+        message = "Delete a invoice from the database"
+    if request.method == 'POST':
+        invoice_id = request.form.get('invoice_id')
+        return redirect(url_for('delete_invoice_confirmation', invoice_id=invoice_id))
+    return render_template('delete_invoice.html', message=message)
+
+
+@app.route('/delete_invoice/confirmation', methods=['POST', 'GET'])
+def delete_invoice_confirmation():
+    invoice_id = request.args.get('invoice_id', None)
+    data = invoice_search.search_if_exist(dummy_connection(), invoice_id)[0]
+    if not data:
+        message = "No invoice with number {}".format(invoice)
+        return redirect(url_for('delete_invoice', message=message))
+    empty = invoice_search.check_if_empty_invoice(dummy_connection(), invoice_id)
+    if empty:
+        message = "Safe to delete, invoice is empty"
+    else:
+        message = "Caution: You are deleting an invoice that is not empty"
+    if request.method == 'POST':
+        confirmation = request.form.get('confirmation')
+        message = confirmation
+        if confirmation == "yes":
+            message = invoice.delete_invoice(dummy_connection(), invoice_id)
+            return redirect(url_for('delete_invoice', message=message))
+        else:
+            return redirect(url_for('delete_invoice'))
+    return render_template('delete_invoice_confirmation.html', message=message)
 
 
 @app.route('/create_client/', methods=['POST', 'GET'])
@@ -116,6 +163,41 @@ def edit_client_information():
         client_data_to_edit = request.form
         message = clients.edit_client(dummy_connection(), client_data_to_edit, client_id)
         return redirect(url_for('edit_client_information', message=message, client_id=client_id))
+
+
+@app.route('/delete_client/', methods=['POST', 'GET'])
+def delete_client():
+    message = request.args.get('message')
+    if not message:
+        message = "Delete a client from the database"
+    if request.method == 'POST':
+        client_id = request.form.get('client_id')
+        return redirect(url_for('delete_client_confirmation', client_id=client_id))
+    return render_template('delete_client.html', message=message)
+
+
+@app.route('/delete_client/confirmation', methods=['POST', 'GET'])
+def delete_client_confirmation():
+    client_id = request.args.get('client_id', None)
+    data = client_search.search_if_exist(dummy_connection(), client_id)[0]
+    if not data:
+        message = "No client with number {}".format(client_id)
+        return redirect(url_for('delete_client', message=message))
+    invoice_count = invoice_search.count_occurrence_invoice_by_client(dummy_connection(), client_id)
+    if invoice_count:
+        message = "Caution: There is {} invoices associated with client {}, they will all be" \
+                  " deleted.".format(invoice_count, client_id)
+    else:
+        message = "Safe to delete, no invoices matching client {}".format(client_id)
+    if request.method == 'POST':
+        confirmation = request.form.get('confirmation')
+        message = confirmation
+        if confirmation == "yes":
+            message = clients.delete_client(dummy_connection(), client_id)
+            return redirect(url_for('delete_client', message=message))
+        else:
+            return redirect(url_for('delete_client'))
+    return render_template('delete_client_confirmation.html', message=message)
 
 
 @app.route('/create_item/', methods=['POST', 'GET'])
@@ -158,6 +240,36 @@ def edit_item_information():
         return redirect(url_for('edit_item_information', message=message, item_id=item_id))
 
 
+@app.route('/delete_item/', methods=['POST', 'GET'])
+def delete_item():
+    message = request.args.get('message', None)
+    if not message:
+        message = "Delete an item from the database"
+    if request.method == 'POST':
+        item_id = request.form.get('item_id')
+        exist = item_search.search_if_exist(dummy_connection(), item_id)[0]
+        if exist:
+            return redirect(url_for('delete_item_confirmation', item_id=item_id))
+        else:
+            message = "No items with id {}".format(item_id)
+    return render_template('delete_item.html', message=message)
+
+
+@app.route('/delete_item/confirmation', methods=['POST', 'GET'])
+def delete_item_confirmation():
+    item_id = request.args.get('item_id', None)
+    message = "Are you sure you want to delete item number {}".format(item_id)
+    if request.method == 'POST':
+        confirmation = request.form.get('confirmation')
+        message = confirmation
+        if confirmation == "yes":
+            message = item_listing.delete_item_listing(dummy_connection(), item_id)
+            return redirect(url_for('delete_item', message=message))
+        else:
+            return redirect(url_for('delete_item'))
+    return render_template('delete_invoice_confirmation.html', message=message)
+
+
 @app.route('/tutorial/')
 def tutorial():
     return render_template('tutorial.html')
@@ -184,19 +296,10 @@ def create_db_connection(host_name, user_name, user_password, db_name):
     return connection
 
 
-def execute_query(connection, query):
-    cursor = connection.cursor()
-    try:
-        cursor.execute(query)
-        connection.commit()
-        print("Query successful")
-    except Error as err:
-        print(f"Error: '{err}'")
-
-
 def dummy_connection():
     return create_db_connection("localhost", "dummy", "dummy22", "test")
 
 
 if __name__ == '__main__':
-    print('allo')
+    database_dml.init_database(dummy_connection())
+    dummy_data.insert_dummy_data(dummy_connection())

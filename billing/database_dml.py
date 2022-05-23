@@ -103,26 +103,42 @@ statuses = [(1, "Open"),
             (4, "Paid in full - Closed")]
 
 
+def execute_query(connection, query):
+    cursor = connection.cursor()
+    try:
+        cursor.execute(query)
+        connection.commit()
+        print("Query successful")
+    except Error as err:
+        print(f"Error: '{err}'")
+
+
 def init_database(connection):
-    main.execute_query(connection, "DROP TABLE payments")
-    main.execute_query(connection, "DROP TABLE invoice_line")
-    main.execute_query(connection, "DROP TABLE item_listing")
-    main.execute_query(connection, "DROP TABLE address")
-    main.execute_query(connection, "DROP TABLE invoice")
-    main.execute_query(connection, "DROP TABLE clients")
-    main.execute_query(connection, "DROP TABLE status")
-    main.execute_query(connection, create_client_table)
-    main.execute_query(connection, create_address_table)
-    main.execute_query(connection, create_status_table)
-    main.execute_query(connection, create_invoice_table)
-    main.execute_query(connection, create_item_listing_table)
-    main.execute_query(connection, create_invoice_line_table)
-    main.execute_query(connection, create_payments_table)
+    execute_query(connection, "DROP TABLE payments")
+    execute_query(connection, "DROP TABLE invoice_line")
+    execute_query(connection, "DROP TABLE item_listing")
+    execute_query(connection, "DROP TABLE address")
+    execute_query(connection, "DROP TABLE invoice")
+    execute_query(connection, "DROP TABLE clients")
+    execute_query(connection, "DROP TABLE status")
+    execute_query(connection, create_client_table)
+    execute_query(connection, create_address_table)
+    execute_query(connection, create_status_table)
+    execute_query(connection, create_invoice_table)
+    execute_query(connection, create_item_listing_table)
+    execute_query(connection, create_invoice_line_table)
+    execute_query(connection, create_payments_table)
+    execute_query(connection, clients.trigger_new_client_address)
+    execute_query(connection, invoice.trigger_delete_invoice_line_total)
+    execute_query(connection, invoice.trigger_insert_invoice_line_total)
+    execute_query(connection, invoice.trigger_update_invoice_line_total)
+    execute_query(connection, invoice_line.trigger_set_price_invoice_line_insert)
+    execute_query(connection, invoice_line.trigger_set_price_invoice_line_update)
     utils.insert_multiple_rows_generic(connection, status.insert_query, statuses)
-    main.execute_query(connection, clients.trigger_new_client_address)
-    main.execute_query(connection, invoice_line.trigger_insert_invoice_line)
-    main.execute_query(connection, invoice_line.trigger_update_invoice_line)
-    main.execute_query(connection, invoice.trigger_delete_invoice_line_total)
-    main.execute_query(connection, invoice.trigger_insert_invoice_line_total)
-    main.execute_query(connection, invoice.trigger_update_invoice_line_total)
+
+
+def init_database1(connection):
+    execute_query(connection, create_address_table)
+
+
 

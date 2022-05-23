@@ -29,6 +29,8 @@ def create_new_client(connection, client_data):
         message = insert_client_name_email(connection, name, email)
     elif reference:
         message = insert_client_name_reference(connection, name, reference)
+    elif name:
+        message = insert_client_name(connection, name)
     return message
 
 
@@ -262,39 +264,21 @@ DELETE
 """
 
 
-def delete_client(connection):
+def delete_client(connection, client_id):
     cursor = connection.cursor()
+    message = ""
     try:
-        client_id = int(input("Enter the ID of the client you want to delete"))
-        cursor.execute(delete_client_check_exist, (client_id,))
-        data = cursor.fetchall()
-        if not data:
-            print("no client have this id")
-        elif data:
-            cursor.execute(delete_client_check_if_invoice, (client_id,))
-            data = cursor.fetchall()
-            if not data:
-                cursor.execute(delete_client_check_exist, (client_id,))
-                data = cursor.fetchall()
-                print("No matching invoices, safe to delete. Are you sure you want to delete : " + str(data[0]))
-                if utils.confirmation():
-                    cursor.execute(delete_client_check_exist, (client_id,))
-                    cursor.close()
-                    connection.commit()
-            elif data:
-                cursor.execute(delete_client_fetch_invoices, (client_id,))
-                data = cursor.fetchall()
-                print("There are still existing invoices of the client, "
-                      "please delete those beforehand" + str(data))
-
+        cursor.execute("DELETE FROM invoice WHERE client_id=%s", (client_id,))
+        cursor.execute("DELETE FROM clients WHERE id=%s", (client_id,))
+        connection.commit()
+        message = "Successfully deleted client number {}".format(client_id)
     except mysql.connector.Error as error:
-        print("Failed to insert record into MySQL table {}".format(error))
-
+        message = "Error deleting client number {}".format(client_id)
     finally:
         if connection.is_connected():
             cursor.close()
             connection.close()
-            print("MySQL connection is closed")
+    return message
 
 
 delete_client_check_exist = "SELECT * FROM clients WHERE id = %s;"

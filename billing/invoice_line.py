@@ -110,7 +110,6 @@ def delete_invoice_line(cursor, invoice_id, item_id):
     return cursor.fetchall()
 
 
-
 def update_invoice_line(connection, column, invoice_id, item_id, update):
     validation = check_if_invoice_exist(connection, invoice_id) and check_if_item_exist(connection, item_id) #NNOT GOOD
     cursor = connection.cursor()
@@ -147,10 +146,6 @@ update_quantity_query = "UPDATE invoice_line SET quantity =%s WHERE invoice_id =
 TIGGER INSERTION
 """
 
-trigger_insert_invoice_line_total = "CREATE TRIGGER insert_payment_change_total AFTER INSERT ON payment" \
-                                    " FOR EACH ROW UPDATE invoice I SET total_paid =" \
-                                    "(SELECT SUM(total) FROM payment P WHERE I.invoice_id = P.invoice_id)" \
-                                    " WHERE I.invoice_id = New.invoice_id;"
 
-
-
+trigger_set_price_invoice_line_insert = "CREATE TRIGGER total_price_invoice_line_insert BEFORE INSERT ON invoice_line FOR EACH ROW SET new.total = new.quantity * new.price;"
+trigger_set_price_invoice_line_update = "CREATE TRIGGER total_price_invoice_line_update BEFORE UPDATE ON invoice_line FOR EACH ROW SET new.total = new.quantity * new.price;"

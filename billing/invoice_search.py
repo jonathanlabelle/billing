@@ -39,3 +39,34 @@ def check_invoice_line_exist(cursor, invoice_id, item_id):
     finally:
         cursor.close()
     return data
+
+
+def count_occurrence_invoice_by_client(connection, client_id):
+    cursor = connection.cursor()
+    count = 0
+    try:
+        cursor.execute("select COUNT(*) from invoice where client_id=%s;", (client_id,))
+        data = cursor.fetchall()
+        count = data[0][0]
+    except Error as err:
+        count = 0
+    finally:
+        cursor.close()
+    return count
+
+
+def check_if_empty_invoice(connection, invoice_id):
+    cursor = connection.cursor()
+    count = 0
+    empty = True
+    try:
+        cursor.execute("select COUNT(*) from invoice_line where invoice_id=%s;", (invoice_id,))
+        data = cursor.fetchall()
+        count = data[0][0]
+        if count != 0:
+            empty = False
+    except Error as err:
+        empty = False
+    finally:
+        cursor.close()
+    return empty

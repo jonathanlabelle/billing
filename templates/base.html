@@ -24,16 +24,16 @@
                             <li><a href="{{ url_for('create_invoice') }}">Create Invoice</a></li>
                             <li><a href="{{ url_for('edit_invoice') }}">Edit Invoice</a></li>
                             <li><a href="{{ url_for('edit_invoice') }}">View Invoice</a></li>
-                            <li><a href="{{ url_for('edit_invoice') }}">Delete Invoice</a></li>
+                            <li><a href="{{ url_for('delete_invoice') }}">Delete Invoice</a></li>
                         </ul>
                     </li>
                     <li>
                         <ul class="list-unstyled group-sidebar">
                             <p class="h5 sidebar-header">Customers   <i class="fa-solid fa-users"></i></p>
-                            <li><a href="{{ url_for('create_client') }}">Create Customer</a></li>
-                            <li><a href="{{ url_for('edit_client') }}">Edit Customer</a></li>
-                            <li><a href="{{ url_for('edit_client') }}">View Customer</a></li>
-                            <li><a href="{{ url_for('edit_client') }}">Delete Customer</a></li>
+                            <li><a href="{{ url_for('create_client') }}">Create Client</a></li>
+                            <li><a href="{{ url_for('edit_client') }}">Edit Client</a></li>
+                            <li><a href="{{ url_for('edit_client') }}">View Client</a></li>
+                            <li><a href="{{ url_for('delete_client') }}">Delete Client</a></li>
                         </ul>
                     </li>
                     <li>
@@ -42,7 +42,7 @@
                             <li><a href="{{ url_for('create_item') }}">Create Item</a></li>
                             <li><a href="{{ url_for('edit_item') }}">Edit Item</a></li>
                             <li><a href="{{ url_for('edit_item') }}">View Item</a></li>
-                            <li><a href="{{ url_for('edit_item') }}">Delete Item</a></li>
+                            <li><a href="{{ url_for('delete_item') }}">Delete Item</a></li>
                         </ul>
                     </li>
                     <li class="group-sidebar"><a href="{{ url_for('tutorial') }}">Tutorial</a></li>
