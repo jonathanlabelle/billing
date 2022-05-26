@@ -102,6 +102,13 @@ statuses = [(1, "Open"),
             (3, "Late due"),
             (4, "Paid in full - Closed")]
 
+invoice_list_view = """
+CREATE VIEW invoice_list 
+AS SELECT invoice.invoice_id, invoice.client_id, clients.name, total, total_paid 
+FROM invoice, clients 
+WHERE invoice.client_id = clients.id;
+"""
+
 
 def execute_query(connection, query):
     cursor = connection.cursor()
@@ -128,6 +135,7 @@ def init_database(connection):
     execute_query(connection, create_item_listing_table)
     execute_query(connection, create_invoice_line_table)
     execute_query(connection, create_payments_table)
+    execute_query(connection, invoice_list_view)
     execute_query(connection, clients.trigger_new_client_address)
     execute_query(connection, invoice.trigger_delete_invoice_line_total)
     execute_query(connection, invoice.trigger_insert_invoice_line_total)

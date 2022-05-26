@@ -270,6 +270,28 @@ def delete_item_confirmation():
     return render_template('delete_invoice_confirmation.html', message=message)
 
 
+@app.route('/view-invoices/')
+def view_invoices():
+    return render_template('view_invoices.html')
+
+
+@app.route('/view-invoices/last-10')
+def view_invoices_last_10():
+    data = invoice_search.get_last_10_invoices(dummy_connection())
+    return render_template('view_invoices_last_10.html', data=data)
+
+
+@app.route('/view-invoices/all-invoices')
+def view_invoices_all_invoices():
+    data = invoice_search.get_all_invoices(dummy_connection())
+    return render_template('view_invoices_all_invoices.html', data=data)
+
+
+@app.route('/view-invoices-by-invoice-number', methods=['POST', 'GET'])
+def view_invoices_by_invoice_number():
+    return render_template('view_invoices_by_invoice_number.html')
+
+
 @app.route('/tutorial/')
 def tutorial():
     return render_template('tutorial.html')

@@ -16,6 +16,34 @@ def search_if_exist(connection, invoice_id):
     return exist
 
 
+def get_all_invoices(connection):
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT * from invoice_list ORDER BY invoice_id;")
+        data = cursor.fetchall()
+    except Error as err:
+        data = None
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    return data
+
+
+def get_last_10_invoices(connection):
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT * FROM invoice_list ORDER BY invoice_id DESC LIMIT 10;")
+        data = cursor.fetchall()
+    except Error as err:
+        data = None
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    return data
+
+
 def get_item_data(connection, invoice_id):
     cursor = connection.cursor()
     try:

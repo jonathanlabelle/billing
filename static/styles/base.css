@@ -4,10 +4,75 @@ html,body {
     color: #252422;
 }
 
-.topper {
+
+
+.top-nav {
+    padding: 10px;
     height: 55px;
     background-color: #403D39;
     width: 100%;
+}
+
+.site-navigation ul {
+  background: #403D39;
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.site-navigation li {
+    font-size: 1.2rem;
+  color: #fff;
+  background: #403D39;
+  display: flex;
+  float: left;
+  width: 25%;
+  position: relative;
+  border-bottom: 1px solid #EB5E28;
+  text-transform: uppercase;
+  margin-right: 5px;
+}
+
+.site-navigation li a {
+  color: #fff;
+  text-decoration: none;
+  display: block;
+}
+
+.site-navigation li:hover {
+  @include transition(background, 0.2s);
+  background: #52a6df;
+  cursor: pointer;
+}
+
+.site-navigation ul li ul {
+  display: block;
+  background: #52a6df;
+  visibility: hidden;
+  float: left;
+  min-width: 150px;
+  position: absolute;
+  transition: visibility 0.65s ease-in;
+  margin-top:30px;
+  left: 0;
+  z-index: 999;
+}
+
+.site-navigation ul li:hover > ul,
+.site-navigation ul li ul:hover {
+   visibility: visible;
+}
+
+.site-navigation ul li ul li {
+  clear: both;
+  padding: 5px 0 5px 18px;
+  width: 100%;
+}
+
+.site-navigation ul li ul li:hover {
+  background: #74b7e4;
 }
 
 #panel {
@@ -38,7 +103,6 @@ body {
     max-width: 250px;
     background: #403D39;
     color: #D9D9D9;
-    transition: all 0.3s;
 }
 
 #sidebar-header {
@@ -249,4 +313,99 @@ input[type='radio']:checked:after {
     margin: 20px;
     min-width: 150px;
     flex-grow: 1;
+}
+
+/* VIEWS */
+
+.view {
+    width: 100%;
+    align-items: stretch;
+    display: flex;
+    justify-content: center;
+    width: 70vh;
+    height: 80vh;
+    margin-top: 50px;
+    border: 1px solid red;
+    flex-grow: 1;
+    max-height: 100vh;
+    overflow: auto;
+}
+
+.view .page-content {
+    min-width: 800px;
+    min-height: 700px;
+    height: 80vh;
+    border: 1px solid blue;
+    width: 70%;
+    overflow: auto;
+}
+
+.view .page-content .button-bar {
+    height: 50px;
+    background-color: #CCC5B9;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+}
+
+.view .page-content .button-bar ul {
+    width: 100%;
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    margin: 0;
+    padding: 0;
+}
+
+.view .page-content .button-bar li {
+    font-size: 1.3rem;
+    display: flex;
+    width: 25%;
+    height: 100%;
+    position: relative;
+    background: #403D39;
+}
+
+.view .page-content .button-bar li a {
+    text-decoration: none;
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+.view .page-content .button-bar li a:hover {
+    color: #353535;
+    background: #fff;
+    text-decoration: none;
+}
+
+.view .page-content .request-view {
+    border: 3px solid green;
+    height: 80%;
+    overflow: scroll;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+#invoice_number_view {
+    width: 100vh;
+    border: none;
+    box-shadow: none;
+    position: absolute;
+    margin-left: 100px;
+}
+
+#invoice_number_view .form-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+#invoice_number_view input[type='text'] {
+    width: 150px;
 }

@@ -1,0 +1,27 @@
+{% extends 'view_invoices.html' %}
+{% block request_view %}
+    <div class="overflow-hidden">
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <th>Invoice Id</th>
+                <th>Client Id</th>
+                <th>Client Name</th>
+                <th>Invoice Total</th>
+                <th>Paid Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in data %}
+            <tr>
+                <td>{{row[0]}}</td>
+                <td>{{row[1]}}</td>
+                <td>{{row[2]}}</td>
+                <td>{{row[3]}}</td>
+                <td>{{row[4]}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        </div>
+{% endblock %}

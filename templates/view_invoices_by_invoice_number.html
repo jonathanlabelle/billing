@@ -1,0 +1,21 @@
+{% extends 'view_invoices.html' %}
+{% block title%} Search invoice {% endblock%}
+{% block request_view %}
+    <div class="overflow-hidden">
+        <div class="form-body" id="invoice_number_view">
+            <div class="form-content">
+                <div class="form-header">
+                    <h4>Search invoice by number</h4>
+                    <p>Enter the ID of the invoice</p>
+                </div>
+                <div class="form-inputs">
+                    <form action="" method="POST">
+                        <p><input type="text" name="invoice_id" placeholder="Invoice_id"/></p>
+                        <p><button type="submit" class="btn btn-primary submit">Get invoice</button></p>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
