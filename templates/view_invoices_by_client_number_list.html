@@ -6,20 +6,16 @@
             <tr>
                 <th>Invoice Id</th>
                 <th>Client Id</th>
-                <th>Client Name</th>
                 <th>Invoice Total</th>
-                <th>Paid Amount</th>
             </tr>
         </thead>
         <tbody>
-            {% for row in data %}
-            <tr>
-                <td><a href="{{url_for('view_invoice', invoice_id=row[0])}}">{{row[0]}}</a> </td>
-                <td>{{row[1]}}</td>
-                <td>{{row[2]}}</td>
-                <td>{{row[3]}}</td>
-                <td>{{row[4]}}</td>
-            </tr>
+            {% for invoice in invoices %}
+                <tr>
+                    <td><a href="{{url_for('view_invoice', invoice_id=row[0])}}">{{row[0]}}</a> </td>
+                    <td>{{invoice[1]}}</td>
+                    <td>{{invoice[4]}}</td>
+                </tr>
             {% endfor %}
         </tbody>
     </table>

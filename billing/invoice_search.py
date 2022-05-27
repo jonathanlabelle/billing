@@ -30,6 +30,34 @@ def get_all_invoices(connection):
     return data
 
 
+def get_all_invoice_line(connection, invoice_id):
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT * from invoice_line WHERE invoice_id={}".format(invoice_id))
+        data = cursor.fetchall()
+    except Error as err:
+        data = None
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    return data
+
+
+def get_invoice_total(connection, invoice_id):
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT total FROM invoice WHERE invoice_id={}".format(invoice_id))
+        data = cursor.fetchone()
+    except Error as err:
+        data = None
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    return data
+
+
 def get_last_10_invoices(connection):
     cursor = connection.cursor()
     try:
@@ -98,3 +126,17 @@ def check_if_empty_invoice(connection, invoice_id):
     finally:
         cursor.close()
     return empty
+
+
+def get_all_invoices_client(connection, client_id):
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT * FROM invoice WHERE client_id=%s;", (client_id,))
+        data = cursor.fetchall()
+    except Error as err:
+        data = None
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    return data

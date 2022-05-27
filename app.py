@@ -288,7 +288,35 @@ def view_invoices_all_invoices():
 
 @app.route('/view-invoices-by-invoice-number', methods=['POST', 'GET'])
 def view_invoices_by_invoice_number():
+    if request.method == 'POST':
+        invoice_id = request.form.get('invoice_id')
+        rows = invoice_search.get_all_invoice_line(dummy_connection(), invoice_id)
+        return redirect(url_for('view_invoice', invoice_id=invoice_id, rows=rows))
     return render_template('view_invoices_by_invoice_number.html')
+
+
+@app.route('/view_invoice/')
+@app.route('/view-invoice/<int:invoice_id>')
+def view_invoice(invoice_id):
+    rows = invoice_search.get_all_invoice_line(dummy_connection(), invoice_id)
+    total = invoice_search.get_invoice_total(dummy_connection(), invoice_id)[0]
+    client_name = client_search.get_client_name_from_invoice(dummy_connection(), invoice_id)[0]
+    return render_template('view_invoice.html', invoice_id=invoice_id, rows=rows, total=total, client_name=client_name)
+
+
+@app.route('/view-invoice/view-invoices-by-client', methods=['POST', 'GET'])
+def view_invoices_by_client_number():
+    if request.method == 'POST':
+        client_id = request.form.get('client_id')
+        return redirect(url_for('view_invoices_by_client_number_list', client_id=client_id))
+    return render_template('view_invoices_by_client_number.html')
+
+
+@app.route('/view-invoice/view-invoices-by-client-list')
+def view_invoices_by_client_number_list():
+    client_id = request.args.get('client_id')
+    invoices = invoice_search.get_all_invoices_client(dummy_connection(), client_id)
+    return render_template('view_invoices_by_client_number_list.html', invoices=invoices)
 
 
 @app.route('/tutorial/')
@@ -322,5 +350,8 @@ def dummy_connection():
 
 
 if __name__ == '__main__':
-    database_dml.init_database(dummy_connection())
-    dummy_data.insert_dummy_data(dummy_connection())
+    #database_dml.init_database(dummy_connection())
+    #dummy_data.insert_dummy_data(dummy_connection())
+    data = invoice_search.get_all_invoices_client(dummy_connection(), 6)
+    for invoice in data:
+        print(invoice[0])

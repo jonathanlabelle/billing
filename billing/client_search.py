@@ -28,3 +28,17 @@ def get_client_data(connection, client_id):
             cursor.close()
             connection.close()
     return data
+
+
+def get_client_name_from_invoice(connection, invoice_id):
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT name FROM clients WHERE id=(SELECT client_id FROM invoice WHERE invoice_id=%s);", (invoice_id,))
+        data = cursor.fetchone()
+    except Error as err:
+        data = None
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    return data

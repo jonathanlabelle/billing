@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title%} Index {% endblock%}
+
+{% block content %}
+  <div class="overflow-hidden">
+      <table class="table">
+            <tbody>
+            <tr>
+                  <th>Invoice Number:</th>
+                  <th>{{ invoice_id }}</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+                <tr>
+                  <th>Client:</th>
+                  <th>{{ client_name }}</th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                  <th></th>
+                </tr>
+          </tbody>
+      </table>
+      <table class="table">
+          <thead class="table-dark">
+                <tr>
+                  <th>Item ID</th>
+                  <th>Item name</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Total</th>
+                </tr>
+          </thead>
+          <tbody>
+              {% for row in rows %}
+              <tr>
+                  <td>{{row[1]}}</td>
+                  <td>{{row[2]}}</td>
+                  <td>{{row[3]}}</td>
+                  <td>{{row[4]}}</td>
+                  <td>{{row[5]}}</td>
+              </tr>
+              {% endfor %}
+              <tr>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td>TOTAL:</td>
+                  <td>{{total}}</td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
+{% endblock %}
