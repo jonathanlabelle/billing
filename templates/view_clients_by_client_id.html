@@ -1,0 +1,20 @@
+{% extends 'view_clients.html' %}
+{% block title%} Search invoice {% endblock%}
+{% block request_view %}
+    <div class="overflow-hidden">
+        <div class="form-body" id="invoice_number_view">
+            <div class="form-content">
+                <div class="form-header">
+                    <h4>Search Client by number</h4>
+                    <p>Enter the ID of the Client</p>
+                </div>
+                <div class="form-inputs">
+                    <form action="" method="POST">
+                        <p><input type="text" name="client_id" placeholder="Client id"/></p>
+                        <p><button type="submit" class="btn btn-primary submit">Get client</button></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

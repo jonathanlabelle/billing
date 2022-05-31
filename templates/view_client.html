@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title%} Index {% endblock%}
+
+{% block content %}
+
+      <div class="view">
+          <div class="view-client overflow-hidden">
+          <table class="table">
+                <tbody>
+                <tr>
+                      <th>Client Name:</th>
+                      <th>{{client_info[0][1]}}</th>
+                    </tr>
+                    <tr>
+                      <th>Client ID:</th>
+                      <th>{{client_info[0][0]}}</th>
+                    </tr>
+                    <tr>
+                      <th>Reference person:</th>
+                      <th>{{client_info[0][4]}}</th>
+                    </tr>
+                    <tr>
+                      <th>Client phone:</th>
+                      <th>{{client_info[0][2]}}</th>
+                    </tr>
+                    <tr>
+                      <th>Client email:</th>
+                      <th>{{client_info[0][3]}}</th>
+                    </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="view-client">
+            <h5>Invoices</h5>
+              <table class="table">
+                  <thead class="table-dark">
+                    <tr>
+                      <th>Invoice ID</th>
+                      <th>Invoice Total</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                      {% for client_invoice in client_invoices %}
+                          <tr>
+                              <td><a href="{{url_for('view_invoice', invoice_id=client_invoice[0])}}">{{client_invoice[0]}}</a></td>
+                              <td>{{client_invoice[4]}}</td>
+                          </tr>
+                      {% endfor %}
+                      </tbody>
+      </table>
+          </div>
+      </div>
+{% endblock %}

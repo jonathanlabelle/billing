@@ -49,24 +49,9 @@
             <div class="top-nav">
                 <nav id="navigation" class="site-navigation" role="navigation">
                   <ul class="menu">
-                    <li class="menu-item"><a href="#">Clients</a>
-                      <ul class="dropdown">
-                        <li class="menu-item sub-menu"><a href="#">1</a></li>
-                        <li class="menu-item sub-menu"><a href="#">2</a></li>
-                      </ul>
-                    </li>
-                    <li class="menu-item"><a href="#">Invoices</a>
-                      <ul class="dropdown">
-                        <li class="menu-item sub-menu"><a href="{{ url_for('view_invoices') }}">View all invoices</a></li>
-                        <li class="menu-item sub-menu"><a href="#">2</a></li>
-                      </ul>
-                    </li>
-                    <li class="menu-item"><a href="#">Items</a>
-                      <ul class="dropdown">
-                        <li class="menu-item sub-menu"><a href="#">1</a></li>
-                        <li class="menu-item sub-menu"><a href="#">2</a></li>
-                      </ul>
-                    </li>
+                      <li class="menu-item sub-menu"><a href="{{ url_for('view_invoices') }}">View all invoices</a></li>
+                      <li class="menu-item sub-menu"><a href="{{ url_for('view_clients') }}">View all clients</a></li>
+                      <li class="menu-item sub-menu"><a href="{{ url_for('view_items') }}">View all items</a></li>
                   </ul>
                 </nav>
             </div>

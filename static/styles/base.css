@@ -414,3 +414,21 @@ input[type='radio']:checked:after {
 table a {
     color: black;
 }
+
+.not-exist {
+    font-size: 2rem;
+    display: block;
+    text-align: center;
+    padding-top: 10vh;
+}
+
+.view .view-client {
+    overflow: scroll;
+    padding: 40px;
+    display: inline-block;
+    width: 100%;
+    min-width: 300px;
+    border: 1px solid grey;
+    border-radius: 3px;
+    text-align: left;
+}

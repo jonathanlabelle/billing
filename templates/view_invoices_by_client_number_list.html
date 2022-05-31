@@ -1,6 +1,9 @@
 {% extends 'view_invoices.html' %}
 {% block request_view %}
     <div class="overflow-hidden">
+    {% if client_exist == '0' %}
+        <p class="not-exist">Client does not exist</p>
+    {% else %}
     <table class="table">
         <thead class="table-dark">
             <tr>
@@ -12,7 +15,7 @@
         <tbody>
             {% for invoice in invoices %}
                 <tr>
-                    <td><a href="{{url_for('view_invoice', invoice_id=row[0])}}">{{row[0]}}</a> </td>
+                    <td><a href="{{url_for('view_invoice', invoice_id=invoice[0])}}">{{invoice[0]}}</a> </td>
                     <td>{{invoice[1]}}</td>
                     <td>{{invoice[4]}}</td>
                 </tr>
@@ -20,4 +23,5 @@
         </tbody>
     </table>
         </div>
+    {% endif %}
 {% endblock %}

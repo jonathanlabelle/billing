@@ -1,0 +1,29 @@
+{% extends 'view_clients.html' %}
+{% block request_view %}
+    <div class="overflow-hidden">
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                <th>Client Id</th>
+                <th>Client Name</th>
+                <th>Phone number</th>
+                <th>Email</th>
+                <th>Reference</th>
+                <th>Total invoices</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in clients_data %}
+            <tr>
+                <td>{{row[0]}}</td>
+                <td>{{row[1]}}</td>
+                <td>{{row[2]}}</td>
+                <td>{{row[3]}}</td>
+                <td>{{row[4]}}</td>
+                <td>{{row[6]}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        </div>
+{% endblock %}

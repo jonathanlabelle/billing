@@ -42,3 +42,33 @@ def get_client_name_from_invoice(connection, invoice_id):
             cursor.close()
             connection.close()
     return data
+
+
+def get_all_clients(connection):
+    cursor = connection.cursor()
+    try:
+        cursor.execute("select clients.*, count(invoice.client_id) as total_invoice from clients "
+                       "LEFT JOIN invoice ON invoice.client_id=clients.id group by clients.id;")
+        data = cursor.fetchall()
+    except Error as err:
+        data = None
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    return data
+
+
+def get_all_clients_by_name(connection):
+    cursor = connection.cursor()
+    try:
+        cursor.execute("select clients.*, count(invoice.client_id) as total_invoice from clients "
+                       "LEFT JOIN invoice ON invoice.client_id=clients.id group by clients.id ORDER BY clients.name;")
+        data = cursor.fetchall()
+    except Error as err:
+        data = None
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    return data

@@ -1,0 +1,20 @@
+{% extends 'view_items.html' %}
+{% block title%} Search items {% endblock%}
+{% block request_view %}
+    <div class="overflow-hidden">
+        <div class="form-body" id="invoice_number_view">
+            <div class="form-content">
+                <div class="form-header">
+                    <h4>Search Item by number</h4>
+                    <p>Enter the ID of the Items</p>
+                </div>
+                <div class="form-inputs">
+                    <form action="" method="POST">
+                        <p><input type="text" name="item_id" placeholder="Client id"/></p>
+                        <p><button type="submit" class="btn btn-primary submit">Get item</button></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+    {% block title %} View invoices {% endblock %}
+{% block content %}
+<div class="view">
+    <div class="page-content">
+        <div class="button-bar">
+            <ul>
+                <li><a href="{{ url_for('view_clients_by_id') }}">All clients by ID</a></li>
+                <li><a href="{{ url_for('view_clients_by_name') }}">All clients by name</a></li>
+                <li><a href="{{ url_for('view_clients_by_client_id') }}">By client number</a></li>
+            </ul>
+        </div>
+        <div class="request-view">
+            {% block request_view %}
+            {% endblock %}
+        </div>
+    </div>
+
+
+</div>
+{% endblock %}

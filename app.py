@@ -2,12 +2,20 @@ import mysql.connector
 from mysql.connector import Error
 from flask import Flask, render_template, request, redirect, url_for
 from markupsafe import escape
+from flask_login import LoginManager
 import datetime
 
 from billing import invoice, clients, client_search, item_listing, item_search, invoice_search, invoice_line, \
     database_dml, dummy_data
 
 app = Flask(__name__)
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_DB'] = 'test'
 
 
 # TODO CLIENT NAME WHEN UPDATE DROP DOWN
@@ -20,8 +28,17 @@ app = Flask(__name__)
 # TODO TRIGGER DELETE INVOICE LINE UPDATE INVOICE TOTAL
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    if request.method == "POST":
+        details = request.form
+        firstName = details['fname']
+        lastName = details['lname']
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO MyUsers(firstName, lastName) VALUES (%s, %s)", (firstName, lastName))
+        mysql.connection.commit()
+        cur.close()
+        return 'success'
     return render_template('index.html')
 
 
@@ -269,6 +286,15 @@ def delete_item_confirmation():
     return render_template('delete_invoice_confirmation.html', message=message)
 
 
+@app.route('/view_invoice/')
+@app.route('/view-invoice/<int:invoice_id>')
+def view_invoice(invoice_id):
+    rows = invoice_search.get_all_invoice_line(dummy_connection(), invoice_id)
+    total = invoice_search.get_invoice_total(dummy_connection(), invoice_id)[0]
+    client_name = client_search.get_client_name_from_invoice(dummy_connection(), invoice_id)[0]
+    return render_template('view_invoice.html', invoice_id=invoice_id, rows=rows, total=total, client_name=client_name)
+
+
 @app.route('/view-invoices/')
 def view_invoices():
     return render_template('view_invoices.html')
@@ -295,28 +321,85 @@ def view_invoices_by_invoice_number():
     return render_template('view_invoices_by_invoice_number.html')
 
 
-@app.route('/view_invoice/')
-@app.route('/view-invoice/<int:invoice_id>')
-def view_invoice(invoice_id):
-    rows = invoice_search.get_all_invoice_line(dummy_connection(), invoice_id)
-    total = invoice_search.get_invoice_total(dummy_connection(), invoice_id)[0]
-    client_name = client_search.get_client_name_from_invoice(dummy_connection(), invoice_id)[0]
-    return render_template('view_invoice.html', invoice_id=invoice_id, rows=rows, total=total, client_name=client_name)
-
-
 @app.route('/view-invoice/view-invoices-by-client', methods=['POST', 'GET'])
 def view_invoices_by_client_number():
     if request.method == 'POST':
         client_id = request.form.get('client_id')
-        return redirect(url_for('view_invoices_by_client_number_list', client_id=client_id))
+        client_exist = client_search.search_if_exist(dummy_connection(), client_id)
+        return redirect(url_for('view_invoices_by_client_number_list', client_id=client_id, client_exist=client_exist))
     return render_template('view_invoices_by_client_number.html')
 
 
 @app.route('/view-invoice/view-invoices-by-client-list')
 def view_invoices_by_client_number_list():
     client_id = request.args.get('client_id')
+    client_exist = request.args.get('client_exist')
     invoices = invoice_search.get_all_invoices_client(dummy_connection(), client_id)
-    return render_template('view_invoices_by_client_number_list.html', invoices=invoices)
+    return render_template('view_invoices_by_client_number_list.html', invoices=invoices, client_exist=client_exist)
+
+
+@app.route('/view_client/')
+@app.route('/view-client/<int:client_id>')
+def view_client(client_id):
+    client_info = client_search.get_client_data(dummy_connection(), client_id)
+    client_invoices = invoice_search.get_all_invoices_client(dummy_connection(), client_id)
+    return render_template('view_client.html', client_info=client_info, client_invoices=client_invoices)
+
+
+@app.route('/view-clients/')
+def view_clients():
+    return render_template('view_clients.html')
+
+
+@app.route('/view-clients-by-id/')
+def view_clients_by_id():
+    clients_data = client_search.get_all_clients(dummy_connection())
+    return render_template('view_clients_by_id.html', clients_data=clients_data)
+
+
+@app.route('/view-clients-by-name/')
+def view_clients_by_name():
+    clients_data = client_search.get_all_clients_by_name(dummy_connection())
+    return render_template('view_clients_by_name.html', clients_data=clients_data)
+
+
+@app.route('/view-clients-by-client-id/', methods=['POST', 'GET'])
+def view_clients_by_client_id():
+    if request.method == 'POST':
+        return redirect(url_for('view_client', client_id=request.form.get('client_id')))
+    return render_template('view_clients_by_client_id.html')
+
+
+@app.route('/view_item/')
+@app.route('/view-item/<int:item_id>')
+def view_item(item_id):
+    item_info = item_search.get_item_data(dummy_connection(), item_id)
+    invoices = invoice_search.get_all_invoices_containing_item(dummy_connection(), item_id)
+    return render_template('view_item.html', item_info=item_info, invoices=invoices)
+
+
+@app.route('/view-items/')
+def view_items():
+    return render_template('view_items.html')
+
+
+@app.route('/view-items-by-id/')
+def view_items_by_id():
+    items = item_search.get_all_items_by_id(dummy_connection())
+    return render_template('view_items_by_id.html', items=items)
+
+
+@app.route('/view-items-by-name/')
+def view_items_by_name():
+    items = item_search.get_all_items_by_name(dummy_connection())
+    return render_template('view_items_by_name.html', items=items)
+
+
+@app.route('/view-items-by-item-id/', methods=['POST', 'GET'])
+def view_items_by_item_id():
+    if request.method == 'POST':
+        return redirect(url_for('view_item', item_id=request.form.get('item_id')))
+    return render_template('view_items_by_item_id.html')
 
 
 @app.route('/tutorial/')
@@ -350,8 +433,6 @@ def dummy_connection():
 
 
 if __name__ == '__main__':
-    #database_dml.init_database(dummy_connection())
+    database_dml.init_database(dummy_connection())
     #dummy_data.insert_dummy_data(dummy_connection())
-    data = invoice_search.get_all_invoices_client(dummy_connection(), 6)
-    for invoice in data:
-        print(invoice[0])
+

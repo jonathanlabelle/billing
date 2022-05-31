@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title%} Item {% endblock%}
+
+{% block content %}
+
+      <div class="view">
+          <div class="view-client overflow-hidden">
+          <table class="table">
+                <tbody>
+                <tr>
+                      <th>Item Name:</th>
+                      <th>{{item_info[0][1]}}</th>
+                    </tr>
+                    <tr>
+                      <th>Client ID:</th>
+                      <th>{{item_info[0][0]}}</th>
+                    </tr>
+                    <tr>
+                      <th>Item price:</th>
+                      <th>{{item_info[0][2]}}</th>
+                    </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="view-client">
+            <h5>Invoices containing items</h5>
+              <table class="table">
+                  <thead class="table-dark">
+                    <tr>
+                      <th>Invoice ID</th>
+                      <th>Price per unit</th>
+                      <th>Quantity</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                      {% for invoice in invoices %}
+                          <tr>
+                              <td><a href="{{url_for('view_invoice', invoice_id=invoice[0])}}">{{invoice[0]}}</a></td>
+                              <td>{{invoice[4]}}</td>
+                              <td>{{invoice[3]}}</td>
+                          </tr>
+                      {% endfor %}
+                      </tbody>
+      </table>
+          </div>
+      </div>
+{% endblock %}

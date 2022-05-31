@@ -140,3 +140,17 @@ def get_all_invoices_client(connection, client_id):
             cursor.close()
             connection.close()
     return data
+
+
+def get_all_invoices_containing_item(connection, item_id):
+    cursor = connection.cursor()
+    try:
+        cursor.execute("SELECT * FROM invoice_line WHERE item_id=%s;", (item_id,))
+        data = cursor.fetchall()
+    except Error as err:
+        data = None
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    return data
